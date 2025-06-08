@@ -57,6 +57,25 @@ def require_auth(function):
 
 @auth_bp.route('/login', methods=['GET'])
 def login():
+    """
+    Redirect to Google OAuth2 consent screen.
+    ---
+    description: |
+      This endpoint redirects the user to Google’s OAuth2 consent page so they can grant access.
+      [Click to login](http://localhost:8080/api/auth/login).
+    tags:
+      - Auth
+    responses:
+      302:
+        description: Redirects the user to Google’s OAuth2 consent page
+        headers:
+          Location:
+            type: string
+            description: URL to Google’s authorization endpoint
+            example: https://accounts.google.com/o/oauth2/auth?client_id=...&redirect_uri=...
+    
+    """
+    
     authorization_url, state = flow.authorization_url(
         access_type='offline',   
         include_granted_scopes='true',
