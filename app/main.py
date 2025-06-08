@@ -5,11 +5,18 @@ import time
 import threading
 import os
 from utils import convert_vietnamese_to_normal
+from flask_session import Session
 
 
             
 app = Flask(__name__)
 app.secret_key = "a-really-random-secret"
+app.config.update({
+    "SESSION_TYPE": "filesystem",
+    "SESSION_FILE_DIR": "./flask_session/",  # where to store session files
+    "SESSION_PERMANENT": False,
+})
+Session(app)
 
 cors = CORS(app)
 

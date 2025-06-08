@@ -8,6 +8,7 @@ from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
+from flask_session import Session
 
 
 
@@ -68,17 +69,13 @@ def login():
 def callback():
     flow.fetch_token(authorization_response=request.url)
     
-    
-    
-    # if not session.get('state') or session['state'] != flow.state:
-    #     return jsonify({"error": "Invalid state parameter"}), 400
-    
+
     creds = flow.credentials
     oauth2 = build('oauth2', 'v2', credentials=creds)
     userinfo = oauth2.userinfo().get().execute()
     google_user_id = userinfo['id']
     
-    session[google_user_id] = {
+    session['google_tokens'] = {
         'access_token':  creds.token,
         'refresh_token': creds.refresh_token
     }

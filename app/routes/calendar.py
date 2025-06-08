@@ -43,33 +43,17 @@ def getEvents():
     :param endDate: The end date in ISO format (YYYY-MM-DD).
     :return: A list of events within the specified date range.
     """
-    # get access_token and refresh_token from session
-    
-    # google_id = request.args.get('google_id')
-    # if not google_id:
-    #     return jsonify({"error": "Google ID is required"}), 400
-    # print("Session data:")
-    # for key, value in session.items():
-    #     print(f"{key}: {value}")
-        
-    # tokens = session.get(google_id)
-    # if not tokens:
-    #     return "No tokens found—please re-login", 401
-    
-    # access_token  = tokens.get('access_token')
-    # refresh_token = tokens.get('refresh_token')  
-      
-    #Print session data for debugging
+
+    # Get Tokens from session or request args
+    tokens = session.get('google_tokens')
+    print("tokens:", tokens)
    
-    access_token = request.args.get('access_token')
-    refresh_token = request.args.get('refresh_token')
+    access_token = tokens.get('access_token') if tokens else request.args.get('access_token')
+    refresh_token = tokens.get('refresh_token') if tokens else request.args.get('refresh_token')
     
         
         
-    print(f"Access token: {access_token}")
-    print(f"Refresh token: {refresh_token}")
-    
-    
+   
     if not access_token or not refresh_token:
         return jsonify({"error": "Access token and refresh token are required"}), 401
     
@@ -114,8 +98,14 @@ def create_event():
     if not payload:
         return jsonify({"error": "No payload provided"}), 400
     
-    access_token = request.args.get('access_token')
-    refresh_token = request.args.get('refresh_token')
+    # Get Tokens from session or request args
+    tokens = session.get('google_tokens')
+    print("tokens:", tokens)
+   
+    access_token = tokens.get('access_token') if tokens else request.args.get('access_token')
+    refresh_token = tokens.get('refresh_token') if tokens else request.args.get('refresh_token')
+    
+        
     if not access_token or not refresh_token:
         return jsonify({"error": "Access token and refresh token are required"}), 401
 
