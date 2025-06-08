@@ -1,0 +1,40 @@
+from flask import Flask,request
+from flask_cors import CORS,cross_origin  # The typical way to import flask-cors
+import json
+import time
+import threading
+import os
+from utils import convert_vietnamese_to_normal
+
+
+            
+app = Flask(__name__)
+app.secret_key = "a-really-random-secret"
+
+cors = CORS(app)
+
+
+from routes.lecturer import lecturers_bp 
+from routes.subjects import subjects_bp
+from routes.api import api_bp
+from routes.auth import auth_bp
+from routes.calendar import celandar_bp
+
+def RunWebAPI():
+    import logging
+    log = logging.getLogger('werkzeug')
+    log.setLevel(logging.ERROR)
+    app.register_blueprint(lecturers_bp)
+    app.register_blueprint(subjects_bp)
+    app.register_blueprint(api_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(celandar_bp)
+    
+    app.run(
+        host='0.0.0.0',
+        port=int(os.environ.get("PORT", 8080)),
+        debug=True,            
+    )
+    
+
+RunWebAPI()
