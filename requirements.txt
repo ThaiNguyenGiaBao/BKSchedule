@@ -4,3 +4,5 @@ google-auth-oauthlib>=0.4
 google-api-python-client>=2.0
 python-dotenv>=0.15
 Flask-CORS==3.0.10
+Flask-Session==0.4.0
+flasgger==0.9.5
