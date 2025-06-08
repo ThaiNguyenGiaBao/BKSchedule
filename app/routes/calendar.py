@@ -37,11 +37,39 @@ def getCalendarService(access_token, refresh_token):
 @celandar_bp.route('', methods=['GET'])
 def getEvents():
     """
-    Fetches events from the Google Calendar API within the specified date range.
-    
-    :param startDate: The start date in ISO format (YYYY-MM-DD).
-    :param endDate: The end date in ISO format (YYYY-MM-DD).
-    :return: A list of events within the specified date range.
+    Fetch Google Calendar events within a time window.
+    ---
+    tags:
+      - Calendar
+    parameters:
+      - name: access_token
+        in: query
+        type: string
+        required: false
+        description: OAuth2 access token (if not stored in session)
+      - name: refresh_token
+        in: query
+        type: string
+        required: false
+        description: OAuth2 refresh token (if not stored in session)
+      - name: startDate
+        in: query
+        type: string
+        format: date-time
+        required: false
+        description: RFC3339 timestamp to start fetching events from
+        example: 2025-05-01T00:00:00Z
+      - name: endDate
+        in: query
+        type: string
+        format: date-time
+        required: false
+        description: RFC3339 timestamp to stop fetching events at
+        example: 2025-06-01T00:00:00Z
+    responses:
+      200:
+        description: A list of CalendarEvent objects
+        
     """
 
     # Get Tokens from session or request args
@@ -51,6 +79,8 @@ def getEvents():
     access_token = tokens.get('access_token') if tokens else request.args.get('access_token')
     refresh_token = tokens.get('refresh_token') if tokens else request.args.get('refresh_token')
     
+    print("access_token:", access_token)
+    print("refresh_token:", refresh_token)
         
         
    
@@ -93,6 +123,65 @@ def getEvents():
 
 @celandar_bp.route('/', methods=['POST'])
 def create_event(): 
+    
+    """
+    Create one or more Google Calendar events from a JSON schedule payload.
+    ---
+    tags:
+      - Calendar
+    consumes:
+      - application/json
+    parameters:
+      - name: access_token
+        in: query
+        type: string
+        required: false
+        description: OAuth2 access token (if not stored in session)
+      - name: refresh_token
+        in: query
+        type: string
+        required: false
+        description: OAuth2 refresh token (if not stored in session)
+      - name: payload
+        in: body
+        required: true
+  
+        example:
+          id: "14178"
+          lichHoc:
+            - classInfo:
+                - coSo: " 2  "
+                  dayOfWeek: 3
+                  phong: "H6-411"
+                  tietHoc: [5, 6]
+                  week: [1,2,3,4,5,6,7,9,10,11,12,13,14,15,16]
+              email: "lecaodang@hcmut.edu.vn"
+              emailBT: ""
+              giangVien: "Lê Cao Đăng"
+              giangVienBT: ""
+              group: "L01"
+              ngonNgu: "V"
+              nhomBT: ""
+              nhomLT: "L01"
+              phone: "(84.8) 8 635 869 – Ext: 5317"
+              phoneBT: ""
+              siso: "16/80"
+              sisoLT: "80"
+          maMonHoc: "AS2009"
+          soTinChi: 0
+          tenMonHoc: "Csở cơ học lượng tử – vlcr"
+    responses:
+      201:
+        description: Events created successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Events created successfully
+     
+    """
+    
     # Get events from request body
     payload = request.get_json()
     if not payload:
@@ -120,6 +209,6 @@ def create_event():
         except Exception as e:
             return jsonify({"error": f"Failed to create event: {str(e)}"}), 500
         
-    return jsonify({"message": "Events created successfully"}), 201
+    return jsonify({"message": "Events created successfully", "event": events}), 201
    
     

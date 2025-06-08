@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 import os 
 import json
+from flasgger import Swagger, swag_from
 
 subjects_bp = Blueprint('subjects', __name__, url_prefix='/api/subjects')
 
@@ -15,7 +16,9 @@ with open(subject_data_path) as f:
     subject = json.load(f)
     
 @subjects_bp.route('', methods=['GET'])
+
 def getSubjects():
+  
     if "CF-Connecting-IP" in request.headers:
         remote_addr = request.headers.getlist("CF-Connecting-IP")[0].rpartition(' ')[-1]
     elif 'X-Forwarded-For' in request.headers:

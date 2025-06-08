@@ -41,6 +41,22 @@ def search_info_lecturer(data_lecturer,giangVien):
 
 @lecturers_bp.route('', methods=['GET'])
 def WebAPI_Info():
+    """
+    Get lecturer information, either all lecturers or a single lecturer by name.
+    ---
+    tags:
+      - Lecturers
+    parameters:
+      - name: gv
+        in: query
+        type: string
+        required: false
+        description: Full name of the lecturer to look up
+        example: Phan Trong Nhan
+    responses:
+      200:
+        description: Returns either a single Lecturer object (if `gv` is provided) or a list of Lecturer objects
+    """
     if "CF-Connecting-IP" in request.headers:
         remote_addr = request.headers.getlist("CF-Connecting-IP")[0].rpartition(' ')[-1]
     elif 'X-Forwarded-For' in request.headers:

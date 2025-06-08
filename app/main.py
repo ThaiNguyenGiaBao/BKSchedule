@@ -6,7 +6,7 @@ import threading
 import os
 from utils import convert_vietnamese_to_normal
 from flask_session import Session
-
+from flasgger import Swagger
 
             
 app = Flask(__name__)
@@ -17,7 +17,7 @@ app.config.update({
     "SESSION_PERMANENT": False,
 })
 Session(app)
-
+Swagger(app)
 cors = CORS(app)
 
 

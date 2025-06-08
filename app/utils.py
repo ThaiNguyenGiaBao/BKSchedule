@@ -69,7 +69,7 @@ def transform_to_calendar_events(payload: dict) -> list[dict]:
                     "reminders": {
                         "useDefault": False,
                         "overrides": [
-                            {"method": "popup", "minutes": 20},
+                            {"method": "popup", "minutes": 10},
                         ],
                     },
                 }
